@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Filter, Search, X, Circle, Grid3X3, LayoutGrid, Maximize2 } from 'lucide-react';
 import { projects, getAllTags, Project } from '../data/projects';
-import ProjectModal from '../components/ProjectModal';
+import ArtworkDetail from '../components/ArtworkDetail';
 import Lightbox from '../components/Lightbox';
 
 type ViewMode = 'exhibition' | 'masonry' | 'wall';
@@ -63,8 +63,16 @@ const Gallery: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [viewMode, filteredProjects]);
 
-  const handleProjectClick = (project: Project) => {
-    setLightboxProject(project);
+  const handleProjectClick = (project: Project, useDetail = false) => {
+    if (useDetail) {
+      setSelectedProject(project);
+    } else {
+      setLightboxProject(project);
+    }
+  };
+
+  const handleDetailNavigate = (project: Project) => {
+    setSelectedProject(project);
   };
 
   const handleLightboxNavigate = (project: Project) => {
@@ -93,7 +101,7 @@ const Gallery: React.FC = () => {
               <div className={`lg:col-span-8 ${index % 2 === 0 ? '' : 'lg:col-start-5'}`}>
                 <div 
                   className="group cursor-pointer relative overflow-hidden bg-gray-50 dark:bg-gray-900"
-                  onClick={() => handleProjectClick(project)}
+                  onClick={() => handleProjectClick(project, true)}
                   style={{ height: `${getImageHeight(project, index)}px` }}
                 >
                   <img
@@ -103,7 +111,7 @@ const Gallery: React.FC = () => {
                     loading="lazy"
                   />
                   
-                  {/* Zoom Indicator */}
+                  {/* View Detail Indicator */}
                   <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <div className="w-12 h-12 bg-white/90 dark:bg-gray-900/90 rounded-full flex items-center justify-center">
                       <Maximize2 className="h-5 w-5 text-gray-900 dark:text-gray-100" />
@@ -161,10 +169,10 @@ const Gallery: React.FC = () => {
 
                   {/* View Details Button */}
                   <button
-                    onClick={() => handleProjectClick(project)}
+                    onClick={() => handleProjectClick(project, true)}
                     className="group inline-flex items-center space-x-3 text-gray-900 dark:text-gray-100 font-light tracking-wide hover:tracking-widest transition-all duration-500 pt-4"
                   >
-                    <span>View in Detail</span>
+                    <span>View Details</span>
                     <div className="w-8 h-px bg-gray-900 dark:bg-gray-100 group-hover:w-12 transition-all duration-500"></div>
                   </button>
                 </div>
@@ -457,7 +465,16 @@ const Gallery: React.FC = () => {
         )}
       </div>
 
-      {/* Lightbox */}
+      {/* Modals */}
+      {selectedProject && (
+        <ArtworkDetail
+          project={selectedProject}
+          projects={filteredProjects}
+          onClose={() => setSelectedProject(null)}
+          onNavigate={handleDetailNavigate}
+        />
+      )}
+
       {lightboxProject && (
         <Lightbox
           project={lightboxProject}

@@ -52,6 +52,11 @@
     @apply w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-800;
   }
 
+  /* Scroll section tracking */
+  .scroll-section {
+    @apply relative;
+  }
+
   /* Exhibition-specific styles */
   .exhibition-section {
     @apply relative;
@@ -135,6 +140,37 @@
   .gallery-focus:focus {
     @apply outline-none ring-2 ring-gray-900 dark:ring-gray-100 ring-opacity-50 ring-offset-4 ring-offset-white dark:ring-offset-gray-950;
   }
+
+  /* Parallax effects */
+  .parallax-element {
+    @apply transition-transform duration-75 ease-out;
+  }
+
+  /* Artwork detail page styles */
+  .artwork-detail-content {
+    @apply max-w-none prose-lg;
+  }
+
+  .artwork-detail-content p {
+    @apply text-gray-600 dark:text-gray-400 font-light leading-relaxed;
+  }
+
+  /* Info panel animations */
+  .info-panel-enter {
+    @apply opacity-0 transform translate-y-4;
+  }
+
+  .info-panel-enter-active {
+    @apply opacity-100 transform translate-y-0 transition-all duration-500 ease-out;
+  }
+
+  .info-panel-exit {
+    @apply opacity-100 transform translate-y-0;
+  }
+
+  .info-panel-exit-active {
+    @apply opacity-0 transform translate-y-4 transition-all duration-300 ease-in;
+  }
 }
 
 @keyframes fadeIn {
@@ -179,12 +215,25 @@
   }
 }
 
+@keyframes parallaxFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
 .minimal-float {
   animation: minimalFloat 8s ease-in-out infinite;
 }
 
 .exhibition-reveal {
   animation: exhibitionReveal 1.5s ease-out forwards;
+}
+
+.parallax-float {
+  animation: parallaxFloat 12s ease-in-out infinite;
 }
 
 /* Enhanced scrollbar */
@@ -298,6 +347,28 @@ textarea:focus {
     max-width: 95vw !important;
     max-height: 70vh !important;
   }
+
+  /* Mobile homepage adjustments */
+  .scroll-section h1 {
+    font-size: 4rem !important;
+  }
+
+  .scroll-section .minimal-line {
+    width: 12px !important;
+  }
+}
+
+/* Tablet optimizations */
+@media (max-width: 1024px) {
+  .exhibition-section .grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .exhibition-section .lg\\:col-start-5,
+  .exhibition-section .lg\\:col-start-1 {
+    grid-column-start: auto !important;
+  }
 }
 
 /* High-resolution display optimizations */
@@ -312,7 +383,9 @@ textarea:focus {
 @media (prefers-reduced-motion: reduce) {
   .fade-in,
   .slide-up,
-  .exhibition-reveal {
+  .exhibition-reveal,
+  .parallax-float,
+  .minimal-float {
     animation: none;
     opacity: 1;
     transform: none;
@@ -324,5 +397,36 @@ textarea:focus {
   
   .exhibition-image:hover {
     transform: none;
+  }
+
+  .parallax-element {
+    transform: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Dark mode image adjustments */
+@media (prefers-color-scheme: dark) {
+  .gallery-image {
+    filter: brightness(0.9);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .minimal-line,
+  .minimal-dot {
+    @apply bg-black dark:bg-white;
+  }
+
+  .border-gray-200 {
+    @apply border-gray-900;
+  }
+
+  .dark .border-gray-800 {
+    @apply border-gray-100;
   }
 }

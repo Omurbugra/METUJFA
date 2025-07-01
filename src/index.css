@@ -52,9 +52,19 @@
     @apply w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-800;
   }
 
-  /* Gallery-specific styles */
+  /* Exhibition-specific styles */
+  .exhibition-section {
+    @apply relative;
+  }
+
+  .exhibition-section::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent dark:via-gray-800;
+  }
+
+  /* Enhanced gallery styles */
   .gallery-overlay {
-    @apply absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-all duration-500;
+    @apply absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-all duration-700;
   }
 
   .gallery-overlay.active {
@@ -74,16 +84,16 @@
 
   /* Enhanced hover effects */
   .gallery-item {
-    @apply transform transition-all duration-700 ease-out;
+    @apply transform transition-all duration-1000 ease-out;
   }
 
   .gallery-item:hover {
-    @apply -translate-y-2 shadow-2xl;
+    @apply -translate-y-3 shadow-2xl;
   }
 
   /* Smooth image loading */
   .gallery-image {
-    @apply transition-all duration-700 ease-out;
+    @apply transition-all duration-1000 ease-out;
   }
 
   .gallery-image.loading {
@@ -92,6 +102,38 @@
 
   .gallery-image.loaded {
     @apply opacity-100 scale-100;
+  }
+
+  /* Exhibition mode specific styles */
+  .exhibition-image {
+    @apply transition-all duration-1000 ease-out;
+  }
+
+  .exhibition-image:hover {
+    @apply scale-105;
+  }
+
+  /* Lightbox zoom and pan */
+  .lightbox-image {
+    @apply transition-transform duration-700 ease-out;
+  }
+
+  .lightbox-image.zoomed {
+    @apply cursor-grab;
+  }
+
+  .lightbox-image.dragging {
+    @apply cursor-grabbing;
+  }
+
+  /* Smooth section transitions */
+  .section-transition {
+    @apply transition-all duration-1000 ease-in-out;
+  }
+
+  /* Enhanced focus states for gallery */
+  .gallery-focus:focus {
+    @apply outline-none ring-2 ring-gray-900 dark:ring-gray-100 ring-opacity-50 ring-offset-4 ring-offset-white dark:ring-offset-gray-950;
   }
 }
 
@@ -126,8 +168,23 @@
   }
 }
 
+@keyframes exhibitionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .minimal-float {
   animation: minimalFloat 8s ease-in-out infinite;
+}
+
+.exhibition-reveal {
+  animation: exhibitionReveal 1.5s ease-out forwards;
 }
 
 /* Enhanced scrollbar */
@@ -163,7 +220,7 @@ textarea:focus {
 .lightbox-enter-active {
   opacity: 1;
   transform: scale(1);
-  transition: opacity 300ms, transform 300ms;
+  transition: opacity 500ms, transform 500ms;
 }
 
 .lightbox-exit {
@@ -174,18 +231,18 @@ textarea:focus {
 .lightbox-exit-active {
   opacity: 0;
   transform: scale(0.9);
-  transition: opacity 300ms, transform 300ms;
+  transition: opacity 500ms, transform 500ms;
 }
 
 /* Gallery wall specific styles */
 .gallery-wall {
-  column-gap: 2rem;
+  column-gap: 3rem;
   column-fill: balance;
 }
 
 .gallery-wall-item {
   break-inside: avoid;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   display: inline-block;
   width: 100%;
 }
@@ -207,7 +264,7 @@ textarea:focus {
 
 /* Enhanced transitions for view mode changes */
 .view-transition {
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Loading states */
@@ -224,5 +281,48 @@ textarea:focus {
   .gallery-item {
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .exhibition-section {
+    min-height: auto !important;
+  }
+  
+  .gallery-item {
+    margin-bottom: 2rem;
+  }
+  
+  .lightbox-image {
+    max-width: 95vw !important;
+    max-height: 70vh !important;
+  }
+}
+
+/* High-resolution display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .gallery-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .slide-up,
+  .exhibition-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .gallery-item:hover {
+    transform: none;
+  }
+  
+  .exhibition-image:hover {
+    transform: none;
   }
 }
